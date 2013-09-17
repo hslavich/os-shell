@@ -34,12 +34,14 @@ class ShellFrame(wx.Frame):
         
     def onEnterCommand(self, event):
         command = event.GetString()
-        self.txtHistory.AppendText("> " + command)
-        self.txtHistory.AppendText(os.linesep)
+        self.printLn("> " + command)
         if command and not self.shell.runCommand(command):
-            self.txtHistory.AppendText("No txtCommand '" + command + "' found." + os.linesep)
+            self.printLn("No command '" + command + "' found.")
         self.txtCommand.Clear()
         
+    def printLn(self, text):
+        self.txtHistory.AppendText(text)
+        self.txtHistory.AppendText(os.linesep)
 
 app = wx.App(False)
 ShellFrame()
