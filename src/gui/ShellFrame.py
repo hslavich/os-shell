@@ -14,31 +14,31 @@ class ShellFrame(wx.Frame):
         self.Show(True)
         
     def initComponents(self):
-        self.history = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
-        self.history.SetBackgroundColour(wx.BLACK)
-        self.history.SetForegroundColour(wx.WHITE)
-        self.history.Refresh()
-        self.command = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
-        self.command.SetBackgroundColour(wx.BLACK)
-        self.command.SetForegroundColour(wx.WHITE)
-        self.command.Refresh()
-        self.command.SetFocus()
+        self.txtHistory = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        self.txtHistory.SetBackgroundColour(wx.BLACK)
+        self.txtHistory.SetForegroundColour(wx.WHITE)
+        self.txtHistory.Refresh()
+        self.txtCommand = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
+        self.txtCommand.SetBackgroundColour(wx.BLACK)
+        self.txtCommand.SetForegroundColour(wx.WHITE)
+        self.txtCommand.Refresh()
+        self.txtCommand.SetFocus()
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.history, 1, wx.EXPAND)
-        sizer.Add(self.command, 0, wx.EXPAND)
+        sizer.Add(self.txtHistory, 1, wx.EXPAND)
+        sizer.Add(self.txtCommand, 0, wx.EXPAND)
         self.SetSizer(sizer)
         self.SetAutoLayout(1)
         
     def initEvents(self):
-        self.Bind(wx.EVT_TEXT_ENTER, self.onEnterCommand, self.command)
+        self.Bind(wx.EVT_TEXT_ENTER, self.onEnterCommand, self.txtCommand)
         
     def onEnterCommand(self, event):
         command = event.GetString()
-        self.history.AppendText("> " + command)
-        self.history.AppendText(os.linesep)
+        self.txtHistory.AppendText("> " + command)
+        self.txtHistory.AppendText(os.linesep)
         if command and not self.shell.runCommand(command):
-            self.history.AppendText("No command '" + command + "' found." + os.linesep)
-        self.command.Clear()
+            self.txtHistory.AppendText("No txtCommand '" + command + "' found." + os.linesep)
+        self.txtCommand.Clear()
         
 
 app = wx.App(False)
