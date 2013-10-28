@@ -1,10 +1,10 @@
-from Command import *
+from command import *
 
 class Shell:
-    
+
     def __init__(self):
         self.history = []
-    
+
     def runCommand(self, command):
         self.history.append(command)
         if hasattr(Command, command):
