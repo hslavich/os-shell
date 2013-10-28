@@ -1,18 +1,18 @@
 import wx
 import os
-from model.Shell import Shell
 
 class ShellFrame(wx.Frame):
-    
-    def __init__(self):
+
+    def __init__(self, shell):
+        self.app = wx.App(False)
         wx.Frame.__init__(self, None, title="OS Shell", size=(450, 300))
-        self.shell = Shell()
+        self.shell = shell
         self.SetBackgroundColour(wx.BLACK)
         self.initComponents()
         self.initEvents()
         self.Centre()
         self.Show(True)
-        
+
     def initComponents(self):
         self.txtHistory = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         self.txtHistory.SetBackgroundColour(wx.BLACK)
@@ -28,21 +28,20 @@ class ShellFrame(wx.Frame):
         sizer.Add(self.txtCommand, 0, wx.EXPAND)
         self.SetSizer(sizer)
         self.SetAutoLayout(1)
-        
+
     def initEvents(self):
         self.Bind(wx.EVT_TEXT_ENTER, self.onEnterCommand, self.txtCommand)
-        
+
     def onEnterCommand(self, event):
         command = event.GetString()
         self.printLn("> " + command)
         if command and not self.shell.runCommand(command):
             self.printLn("No command '" + command + "' found.")
         self.txtCommand.Clear()
-        
+
     def printLn(self, text):
         self.txtHistory.AppendText(text)
         self.txtHistory.AppendText(os.linesep)
 
-app = wx.App(False)
-ShellFrame()
-app.MainLoop()
+    def start(self):
+        self.app.MainLoop()
