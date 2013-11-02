@@ -1,5 +1,3 @@
-from command import *
-
 class Shell:
 
     def __init__(self):
