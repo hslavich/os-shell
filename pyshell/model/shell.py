@@ -18,13 +18,11 @@ class Shell:
         self.history.append(command)
         try:
             comm = self._splitArgs(command)
-            if len(comm) > 1:
-                self.commands[comm[0]](comm[1])
-            else:
-                self.commands[comm[0]]()
+            self.commands[comm[0]](comm[1])
             return True
         except (KeyError, TypeError):
             return False
 
     def _splitArgs(self, command):
-        return command.split(" ", 1)
+        list = command.split()
+        return (list.pop(0), list)
