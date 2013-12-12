@@ -7,6 +7,7 @@ class ShellFrame(wx.Frame):
         self.app = wx.App(False)
         wx.Frame.__init__(self, None, title="OS Shell", size=(450, 300))
         self.shell = shell
+        self.historyIndex = 0
         self.SetBackgroundColour(wx.BLACK)
         self.initComponents()
         self.initEvents()
@@ -31,6 +32,7 @@ class ShellFrame(wx.Frame):
 
     def initEvents(self):
         self.Bind(wx.EVT_TEXT_ENTER, self.onEnterCommand, self.txtCommand)
+        self.Bind(wx.EVT_CHAR_HOOK, self.onKeyPressed, self.txtCommand)
 
     def onEnterCommand(self, event):
         command = event.GetString()
@@ -38,6 +40,37 @@ class ShellFrame(wx.Frame):
         if command and not self.shell.runCommand(command):
             self.printLn("No command '" + command + "' found.")
         self.txtCommand.Clear()
+        self.historyIndex = 0
+
+    def onKeyPressed(self, event):
+        if event.GetKeyCode() == wx.WXK_DOWN:
+            self.showNextCommand()
+        elif event.GetKeyCode() == wx.WXK_UP:
+            self.showPrevCommand()
+        else:
+            event.Skip()
+
+    def showPrevCommand(self):
+        try:
+            command = self.shell.history[self.historyIndex - 1]
+            self.historyIndex = self.historyIndex - 1
+            self.showCommand(command)
+        except IndexError:
+            pass
+
+    def showNextCommand(self):
+        index = self.historyIndex + 1
+        if index == 0:
+            self.showCommand("")
+            self.historyIndex = index
+        elif index < 0:
+            command = self.shell.history[index]
+            self.showCommand(command)
+            self.historyIndex = index
+
+    def showCommand(self, command):
+        self.txtCommand.Clear()
+        self.txtCommand.AppendText(command)
 
     def printLn(self, text):
         self.txtHistory.AppendText(text)
